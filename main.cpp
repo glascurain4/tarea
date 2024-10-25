@@ -1,9 +1,3 @@
-/*
- * main.cpp
- *
- *  Created on: 10/08/2020
- *      Author: bvaldesa
- */
 #include <iostream>
 #include <sstream>
 #include <cstring>
