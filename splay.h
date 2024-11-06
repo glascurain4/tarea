@@ -24,71 +24,103 @@ private:
     Node* remove(Node* root, T val);
     bool find(Node* root, T val);
 
-    // Recorridos de árbol
     void inorder(std::ostringstream &out);
     void preorder(std::ostringstream &out);
 
 public:
-    Node(T val) : value(val), left(0), right(0) {}
+    Node(T val) {
+        value = val; 
+        left = 0;
+        right = 0;
+    } 
     friend class SplayTree<T>;
 };
 
-// Función para recorrido inorder
 template <class T>
 void Node<T>::inorder(std::ostringstream &out) {
-    if (left) left->inorder(out);
+    if (left) {
+        left->inorder(out);
+    }
+    
     out << value << " ";
-    if (right) right->inorder(out);
+    
+    if (right) {
+        right->inorder(out);
+    }
 }
 
-// Función para recorrido preorder
 template <class T>
 void Node<T>::preorder(std::ostringstream &out) {
     out << value << " ";
-    if (left) left->preorder(out);
-    if (right) right->preorder(out);
+    
+    if (left) {
+        left->preorder(out);
+    }
+    
+    if (right) {
+        right->preorder(out);
+    }
 }
 
 template <class T>
 Node<T>* Node<T>::rightRotate(Node* x) {
     Node* y = x->left;
+    
     x->left = y->right;
     y->right = x;
+    
     return y;
 }
 
 template <class T>
 Node<T>* Node<T>::leftRotate(Node* x) {
     Node* y = x->right;
+    
     x->right = y->left;
     y->left = x;
+    
     return y;
 }
 
 template <class T>
 Node<T>* Node<T>::splay(Node* root, T val) {
-    if (root == 0 || root->value == val) return root;
+    if (root == 0 || root->value == val) {
+        return root;
+    }
 
     if (val < root->value) {
-        if (root->left == 0) return root;
+        if (root->left == 0) {
+            return root;
+        }
+
         if (val < root->left->value) {
             root->left->left = splay(root->left->left, val);
             root = rightRotate(root);
         } else if (val > root->left->value) {
             root->left->right = splay(root->left->right, val);
-            if (root->left->right != 0) root->left = leftRotate(root->left);
+            if (root->left->right != 0) {
+                root->left = leftRotate(root->left);
+            }
         }
-        return root->left == 0 ? root : rightRotate(root);
+        
+        return (root->left == 0) ? root : rightRotate(root);
+
     } else {
-        if (root->right == 0) return root;
+        if (root->right == 0) {
+            return root;
+        }
+
         if (val > root->right->value) {
             root->right->right = splay(root->right->right, val);
             root = leftRotate(root);
         } else if (val < root->right->value) {
             root->right->left = splay(root->right->left, val);
-            if (root->right->left != 0) root->right = rightRotate(root->right);
+            if (root->right->left != 0) {
+                root->right = rightRotate(root->right);
+            }
         }
-        return root->right == 0 ? root : leftRotate(root);
+        
+        return (root->right == 0) ? root : leftRotate(root);
     }
 }
 
@@ -141,17 +173,19 @@ private:
     Node<T> *root;
     int count;
 
-    // Helper para formatear la salida sin espacio al final
     std::string formatOutput(std::ostringstream &out) {
         std::string result = out.str();
         if (!result.empty() && result.back() == ' ') {
-            result.pop_back();  // Elimina el espacio final
+            result.pop_back();
         }
         return result;
     }
 
 public:
-    SplayTree() : root(0), count(0) {}
+    SplayTree() {
+        root = 0;
+        count = 0;
+    }
 
     void add(T val) {
         root = root ? root->add(root, val) : new Node<T>(val);
@@ -189,31 +223,5 @@ public:
         return "[" + formatOutput(out) + "]";
     }
 };
-
-/*
-template <class T> class Splay;
-class Node {
-private:
-	T value;
-	Node *left, *right;
-	int level, balance;
-	Node<T>* predecesor();
-public:
-Node(T);
-Node(T, Node<T>*, Node<T>*, int, int);
-};
-
-class AVL {
-private:
-Node<T> *root;
-
-public:
-AVL();
-void add(T);
-void remove(T);
-bool find(T);
-int size();
-};
-*/
 
 #endif
